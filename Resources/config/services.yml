@@ -1,0 +1,4 @@
+services:
+    pierre_durand_encrypter:
+        class: PierreDurand\EncrypterBundle\Util\Encrypter
+        arguments: ["%pierre_durand_encrypter.key%", "%pierre_durand_encrypter.cipher%", "%pierre_durand_encrypter.mode%"]
