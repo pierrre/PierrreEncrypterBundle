@@ -1,6 +1,6 @@
 <?php
 
-namespace PierreDurand\EncrypterBundle\DependencyInjection;
+namespace Pierrre\EncrypterBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class PierreDurandEncrypterExtension extends Extension implements ConfigurationInterface{
+class PierrreEncrypterExtension extends Extension implements ConfigurationInterface{
 	/**
 	 * @see Symfony\Component\DependencyInjection\Extension.ExtensionInterface::load()
 	 */

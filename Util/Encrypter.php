@@ -1,6 +1,6 @@
 <?php
 
-namespace PierreDurand\EncrypterBundle\Util;
+namespace Pierrre\EncrypterBundle\Util;
 
 class Encrypter{
 	private static $URL_SAFE_REPLACE = array('+/', '-_');

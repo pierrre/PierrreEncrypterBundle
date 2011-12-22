@@ -1,6 +1,6 @@
 <?php
 
-namespace PierreDurand\EncrypterBundle\Command;
+namespace Pierrre\EncrypterBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,7 +14,7 @@ class EncrypterEncryptCommand extends ContainerAwareCommand{
 	protected function configure(){
 		parent::configure();
 		
-		$this->setName('pierredurand:encrypter:encrypt')
+		$this->setName('pierrre:encrypter:encrypt')
 		->setDescription('Encrypt data')
 		->addArgument('data', InputArgument::REQUIRED, 'Data to encrypt');
 	}
@@ -22,7 +22,7 @@ class EncrypterEncryptCommand extends ContainerAwareCommand{
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$data = $input->getArgument('data');
 		
-		$encryptedData = $this->getContainer()->get('pierre_durand_encrypter')->encrypt($data);
+		$encryptedData = $this->getContainer()->get('pierrre_encrypter')->encrypt($data);
 		
 		$output->writeln($encryptedData);
 	}
