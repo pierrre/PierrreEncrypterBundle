@@ -1,12 +1,5 @@
 # PierrreEncrypterBundle
 
-PierrreEncrypterBundle provides easy to use encryption in Symfony2.
-
-Features include:
-
-- A service you can call from PHP code
-- A Twig extension (optional)
-
 ## Prerequisites
 
 Make sure PHP Mcrypt extension is installed.
@@ -80,7 +73,7 @@ pierrre_encrypter:
 
 `key` is the secret that is used to encrypt data. By default, it will use the kernel secret.  
 `algorithm` and `mode` are the encryption algorithm and mode.  
-If you set `useRandomInitializationVector`to false, it will use an blank string as initialization vector.  
+If you set `useRandomInitializationVector` to false, it will use a blank string as initialization vector.  
 Please read the [Mcrypt documentation](http://www.php.net/manual/en/book.mcrypt.php).  
 
 `useBase64` will encode the encrypted data with the base64 algorithm.  
