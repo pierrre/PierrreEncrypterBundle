@@ -16,18 +16,26 @@ class PierrreEncrypterExtension extends Extension implements ConfigurationInterf
 	 * @see Symfony\Component\DependencyInjection\Extension.ExtensionInterface::load()
 	 */
 	public function load(array $configs, ContainerBuilder $container){
+		//Load config
 		$loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 		$loader->load('services.yml');
 		
 		$config = $this->processConfiguration($this, $configs);
 		$alias = $this->getAlias();
 		
+		//Default key
 		if(!isset($config['key'])){
 			$config['key'] = $container->getParameter('kernel.secret');
 		}
 		
+		//Set parameters (basic)
 		foreach($config as $key => $value){
 			$container->setParameter($alias . '.' . $key, $value);
+		}
+		
+		//Twig extension
+		if($config['enableTwigExtension']){
+			$loader->load('twig_extension.yml');
 		}
 	}
 	
@@ -45,6 +53,7 @@ class PierrreEncrypterExtension extends Extension implements ConfigurationInterf
 				->scalarNode('useRandomInitializationVector')->defaultValue(Encrypter::DEFAULT_USE_RANDOM_INITIALIZATION_VECTOR)->end()
 				->scalarNode('useBase64')->defaultValue(Encrypter::DEFAULT_USE_BASE64)->end()
 				->scalarNode('useBase64UrlSafe')->defaultValue(Encrypter::DEFAULT_USE_BASE64_URL_SAFE)->end()
+				->scalarNode('enableTwigExtension')->defaultFalse()->end()
 			->end()
 		;
 		
