@@ -2,6 +2,8 @@
 
 namespace Pierrre\EncrypterBundle\DependencyInjection;
 
+use Pierrre\EncrypterBundle\Util\Encrypter;
+
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
@@ -38,11 +40,11 @@ class PierrreEncrypterExtension extends Extension implements ConfigurationInterf
 		$treeBuilder->root($this->getAlias())
 			->children()
 				->scalarNode('key')->end()
-				->scalarNode('algorithm')->defaultValue(MCRYPT_RIJNDAEL_128)->end()
-				->scalarNode('mode')->defaultValue(MCRYPT_MODE_CBC)->end()
-				->scalarNode('useRandomInitializationVector')->defaultTrue()->end()
-				->scalarNode('useBase64')->defaultTrue()->end()
-				->scalarNode('useBase64UrlSafe')->defaultTrue()->end()
+				->scalarNode('algorithm')->defaultValue(Encrypter::DEFAULT_ALGORITHM)->end()
+				->scalarNode('mode')->defaultValue(Encrypter::DEFAULT_MODE)->end()
+				->scalarNode('useRandomInitializationVector')->defaultValue(Encrypter::DEFAULT_USE_RANDOM_INITIALIZATION_VECTOR)->end()
+				->scalarNode('useBase64')->defaultValue(Encrypter::DEFAULT_USE_BASE64)->end()
+				->scalarNode('useBase64UrlSafe')->defaultValue(Encrypter::DEFAULT_USE_BASE64_URL_SAFE)->end()
 			->end()
 		;
 		

@@ -6,6 +6,12 @@ class Encrypter{
 	const FIXED_INITIALIZATION_VECTOR_CHAR = "\0";
 	private static $BASE64_URL_SAFE_REPLACE = array('+/', '-_');
 	
+	const DEFAULT_ALGORITHM = MCRYPT_RIJNDAEL_128;
+	const DEFAULT_MODE = MCRYPT_MODE_CBC;
+	const DEFAULT_USE_RANDOM_INITIALIZATION_VECTOR = true;
+	const DEFAULT_USE_BASE64 = true;
+	const DEFAULT_USE_BASE64_URL_SAFE = true;
+	
 	private $key;
 	private $algorithm;
 	private $mode;
@@ -26,7 +32,12 @@ class Encrypter{
 	 * 
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($key, $algorithm, $mode, $useRandomInitializationVector, $useBase64, $useBase64UrlSafe){
+	public function __construct($key,
+			$algorithm = self::DEFAULT_ALGORITHM,
+			$mode = self::DEFAULT_MODE,
+			$useRandomInitializationVector = self::DEFAULT_USE_RANDOM_INITIALIZATION_VECTOR,
+			$useBase64 = self::DEFAULT_USE_BASE64,
+			$useBase64UrlSafe = self::DEFAULT_USE_BASE64_URL_SAFE){
 		$this->key = (string)$key;
 		$this->algorithm = (string)$algorithm;
 		$this->mode = (string)$mode;
