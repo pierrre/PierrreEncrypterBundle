@@ -80,7 +80,7 @@ pierrre_encrypter:
 
 `key` is the secret that is used to encrypt data. By default, it will use the kernel secret.
 `algorithm` and `mode` are the encryption algorithm and mode.
-If you set `useRandomInitializationVector`, it will use an blank string as initialization vector.
+If you set `useRandomInitializationVector`to false, it will use an blank string as initialization vector.
 Please read the [Mcrypt documentation](http://www.php.net/manual/en/book.mcrypt.php).
 
 `useBase64` will encode the encrypted data with the base64 algorithm.
@@ -112,8 +112,8 @@ $decryptedData = $encrypter->decrypt($encryptedData);
 
 ``` php
 <?php
-require_once 'Pierrre/EncrypterBundle/Util/Encrypter';
 use Pierrre\EncrypterBundle\Util\Encrypter;
+$encrypter = new Encrypter('mySecret');
 ```
 
 ### Twig extension
