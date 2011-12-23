@@ -135,7 +135,7 @@ class Encrypter{
 			$initializationVector = $this->createFixedInitializationVector($this->initializationVectorSize);
 		}
 		mcrypt_generic_init($this->module, $this->key, $initializationVector);
-		$data = mdecrypt_generic($module, $encryptedData);
+		$data = mdecrypt_generic($this->module, $encryptedData);
 		$data = rtrim($data, "\0");
 		
 		return $data;
