@@ -84,6 +84,9 @@ class Encrypter{
 				throw new \InvalidArgumentException('Encryption is not supported for the "' . gettype($data) . '" type');
 			}
 		}
+		if(strlen($data) == 0){
+			throw new \InvalidArgumentException('Encryption doesn\'t support empty string');
+		}
 		
 		//Encryption
 		if($this->useRandomInitializationVector){
@@ -154,6 +157,8 @@ class Encrypter{
 	
 	/**
 	 * @param int $size
+	 * 
+	 * @return string
 	 */
 	private function createFixedInitializationVector($size){
 		$initializationVector = '';
