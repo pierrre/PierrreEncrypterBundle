@@ -38,8 +38,11 @@ class PierrreEncrypterExtension extends Extension implements ConfigurationInterf
 		$treeBuilder->root($this->getAlias())
 			->children()
 				->scalarNode('key')->end()
-				->scalarNode('cipher')->defaultValue(MCRYPT_RIJNDAEL_128)->end()
-				->scalarNode('mode')->defaultValue(MCRYPT_MODE_ECB)->end()
+				->scalarNode('algorithm')->defaultValue(MCRYPT_RIJNDAEL_128)->end()
+				->scalarNode('mode')->defaultValue(MCRYPT_MODE_CBC)->end()
+				->scalarNode('useRandomInitializationVector')->defaultTrue()->end()
+				->scalarNode('useBase64')->defaultTrue()->end()
+				->scalarNode('useBase64UrlSafe')->defaultTrue()->end()
 			->end()
 		;
 		
