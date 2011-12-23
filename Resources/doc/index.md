@@ -78,13 +78,13 @@ pierrre_encrypter:
 	enableTwigExtension: true
 ```
 
-`key` is the secret that is used to encrypt data. By default, it will use the kernel secret.
-`algorithm` and `mode` are the encryption algorithm and mode.
-If you set `useRandomInitializationVector`to false, it will use an blank string as initialization vector.
-Please read the [Mcrypt documentation](http://www.php.net/manual/en/book.mcrypt.php).
+`key` is the secret that is used to encrypt data. By default, it will use the kernel secret.  
+`algorithm` and `mode` are the encryption algorithm and mode.  
+If you set `useRandomInitializationVector`to false, it will use an blank string as initialization vector.  
+Please read the [Mcrypt documentation](http://www.php.net/manual/en/book.mcrypt.php).  
 
-`useBase64` will encode the encrypted data with the base64 algorithm.
-`useBase64UrlSafe` will replace "+" and "/" characters by "-" and "_".
+`useBase64` will encode the encrypted data with the base64 algorithm.  
+`useBase64UrlSafe` will replace "+" and "/" characters by "-" and "_".  
 
 `enableTwigExtension` controls the Twig extension.
 
