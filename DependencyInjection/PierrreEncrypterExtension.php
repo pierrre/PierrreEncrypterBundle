@@ -23,20 +23,33 @@ class PierrreEncrypterExtension extends Extension implements ConfigurationInterf
 		$config = $this->processConfiguration($this, $configs);
 		$alias = $this->getAlias();
 		
-		//Default key
-		if(!isset($config['key'])){
-			$config['key'] = $container->getParameter('kernel.secret');
+		//Default keys
+		$kernelSecret = $container->getParameter('kernel.secret');
+		foreach($config['encrypters'] as $name => $encrypter){
+			if(!isset($encrypter['key'])){
+				$config['encrypters'][$name]['key'] = $kernelSecret;
+			}
 		}
 		
-		//Set parameters (basic)
-		foreach($config as $key => $value){
-			$container->setParameter($alias . '.' . $key, $value);
-		}
+		//Set encrypters parameters
+		$container->setParameter($alias . '.encrypters', $config['encrypters']);
 		
 		//Twig extension
-		if($config['enableTwigExtension']){
+		$twig = $config['twig'];
+		if($twig['enabled']){
+			$twigDefaultEncrypter = $twig['defaultEncrypter'];
+			
+			if($twigDefaultEncrypter == null){
+				$encrypterNames = array_keys($config['encrypters']);
+				$twigDefaultEncrypter = $encrypterNames[0];
+			}
+			
+			$container->setParameter($alias . '.twig.default_encrypter', $twigDefaultEncrypter);
+			
 			$loader->load('twig_extension.yml');
 		}
+		
+		var_dump($container->getParameterBag());die;
 	}
 	
 	/**
@@ -47,13 +60,27 @@ class PierrreEncrypterExtension extends Extension implements ConfigurationInterf
 		
 		$treeBuilder->root($this->getAlias())
 			->children()
-				->scalarNode('key')->end()
-				->scalarNode('algorithm')->defaultValue(Encrypter::DEFAULT_ALGORITHM)->end()
-				->scalarNode('mode')->defaultValue(Encrypter::DEFAULT_MODE)->end()
-				->scalarNode('useRandomInitializationVector')->defaultValue(Encrypter::DEFAULT_USE_RANDOM_INITIALIZATION_VECTOR)->end()
-				->scalarNode('useBase64')->defaultValue(Encrypter::DEFAULT_USE_BASE64)->end()
-				->scalarNode('useBase64UrlSafe')->defaultValue(Encrypter::DEFAULT_USE_BASE64_URL_SAFE)->end()
-				->scalarNode('enableTwigExtension')->defaultFalse()->end()
+				->arrayNode('encrypters')
+					->requiresAtLeastOneElement()
+					->useAttributeAsKey('name')
+					->prototype('array')
+						->children()
+							->scalarNode('key')->end()
+							->scalarNode('algorithm')->defaultValue(Encrypter::DEFAULT_ALGORITHM)->end()
+							->scalarNode('mode')->defaultValue(Encrypter::DEFAULT_MODE)->end()
+							->scalarNode('random_initialization_vector')->defaultValue(Encrypter::DEFAULT_USE_RANDOM_INITIALIZATION_VECTOR)->end()
+							->scalarNode('base64')->defaultValue(Encrypter::DEFAULT_USE_BASE64)->end()
+							->scalarNode('base64_url_safe')->defaultValue(Encrypter::DEFAULT_USE_BASE64_URL_SAFE)->end()
+						->end()
+					->end()
+				->end()
+				->arrayNode('twig')
+					->addDefaultsIfNotSet()
+					->children()
+						->scalarNode('enabled')->defaultFalse()->end()
+						->scalarNode('defaultEncrypter')->defaultNull()->end()
+					->end()
+				->end()
 			->end()
 		;
 		

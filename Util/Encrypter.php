@@ -8,16 +8,16 @@ class Encrypter{
 	
 	const DEFAULT_ALGORITHM = MCRYPT_RIJNDAEL_128;
 	const DEFAULT_MODE = MCRYPT_MODE_CBC;
-	const DEFAULT_USE_RANDOM_INITIALIZATION_VECTOR = true;
-	const DEFAULT_USE_BASE64 = true;
-	const DEFAULT_USE_BASE64_URL_SAFE = true;
+	const DEFAULT_RANDOM_INITIALIZATION_VECTOR = true;
+	const DEFAULT_BASE64 = true;
+	const DEFAULT_BASE64_URL_SAFE = true;
 	
 	private $key;
 	private $algorithm;
 	private $mode;
-	private $useRandomInitializationVector;
-	private $useBase64;
-	private $useBase64UrlSafe;
+	private $randomInitializationVector;
+	private $base64;
+	private $base64UrlSafe;
 	
 	private $module;
 	private $initializationVectorSize;
@@ -26,24 +26,24 @@ class Encrypter{
 	 * @param string $key
 	 * @param string $algorithm
 	 * @param string $mode
-	 * @param boolean $useRandomInitializationVector
-	 * @param boolean $useBase64
-	 * @param boolean $useBase64UrlSafe
+	 * @param boolean $randomInitializationVector
+	 * @param boolean $base64
+	 * @param boolean $base64UrlSafe
 	 * 
 	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($key,
 			$algorithm = self::DEFAULT_ALGORITHM,
 			$mode = self::DEFAULT_MODE,
-			$useRandomInitializationVector = self::DEFAULT_USE_RANDOM_INITIALIZATION_VECTOR,
-			$useBase64 = self::DEFAULT_USE_BASE64,
-			$useBase64UrlSafe = self::DEFAULT_USE_BASE64_URL_SAFE){
+			$randomInitializationVector = self::DEFAULT_RANDOM_INITIALIZATION_VECTOR,
+			$base64 = self::DEFAULT_BASE64,
+			$base64UrlSafe = self::DEFAULT_BASE64_URL_SAFE){
 		$this->key = (string)$key;
 		$this->algorithm = (string)$algorithm;
 		$this->mode = (string)$mode;
-		$this->useRandomInitializationVector = (bool)$useRandomInitializationVector;
-		$this->useBase64 = (bool)$useBase64;
-		$this->useBase64UrlSafe = (bool)$useBase64UrlSafe;
+		$this->randomInitializationVector = (bool)$randomInitializationVector;
+		$this->base64 = (bool)$base64;
+		$this->base64UrlSafe = (bool)$base64UrlSafe;
 		
 		//Initialize encryption
 		try{
@@ -89,23 +89,23 @@ class Encrypter{
 		}
 		
 		//Encryption
-		if($this->useRandomInitializationVector){
+		if($this->randomInitializationVector){
 			$initializationVector = mcrypt_create_iv($this->initializationVectorSize);
 		} else{
 			$initializationVector = $this->createFixedInitializationVector($this->initializationVectorSize);
 		}
 		mcrypt_generic_init($this->module, $this->key, $initializationVector);
 		$encryptedData = mcrypt_generic($this->module, (string)$data);
-		if($this->useRandomInitializationVector){
+		if($this->randomInitializationVector){
 			$encryptedData = $initializationVector . $encryptedData;
 		}
 		
 		//Base64
-		if($this->useBase64){
+		if($this->base64){
 			$encryptedData = base64_encode($encryptedData);
 			
 			//Url safe
-			if($this->useBase64UrlSafe){
+			if($this->base64UrlSafe){
 				$encryptedData = strtr($encryptedData, self::$BASE64_URL_SAFE_REPLACE[0], self::$BASE64_URL_SAFE_REPLACE[1]);
 			}
 			
@@ -129,8 +129,8 @@ class Encrypter{
 		}
 		
 		//Base64
-		if($this->useBase64){
-			if($this->useBase64UrlSafe){
+		if($this->base64){
+			if($this->base64UrlSafe){
 				$encryptedData = strtr($encryptedData, self::$BASE64_URL_SAFE_REPLACE[1], self::$BASE64_URL_SAFE_REPLACE[0]);
 			}
 			
@@ -142,7 +142,7 @@ class Encrypter{
 		}
 		
 		//Encryption
-		if($this->useRandomInitializationVector){
+		if($this->randomInitializationVector){
 			$initializationVector = substr($encryptedData, 0, $this->initializationVectorSize);
 			$encryptedData = substr($encryptedData, $this->initializationVectorSize);
 		} else{
