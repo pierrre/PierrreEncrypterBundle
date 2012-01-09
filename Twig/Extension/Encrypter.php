@@ -5,21 +5,27 @@ namespace Pierrre\EncrypterBundle\Twig\Extension;
 use \Twig_Extension;
 use \Twig_Filter_Method;
 
-use Pierrre\EncrypterBundle\Util\Encrypter as Util_Encrypter;
+use Pierrre\EncrypterBundle\Util\EncrypterManager;
 
 class Encrypter extends Twig_Extension{
 	/**
-	 * @var Pierrre\EncrypterBundle\Util\Encrypter
+	 * @var Pierrre\EncrypterBundle\Util\EncrypterManager
 	 */
-	private $encrypter;
-
+	private $encrypterManager;
+	
 	/**
-	 * @param Pierrre\EncrypterBundle\Util\Encrypter $encrypter
+	 * @var string
 	 */
-	public function __construct(Util_Encrypter $encrypter){
-		$this->encrypter = $encrypter;
+	private $defaultEncrypterName;
+	
+	/**
+	 * @param Pierrre\EncrypterBundle\Util\EncrypterManager $encrypterManager
+	 */
+	public function __construct(EncrypterManager $encrypterManager, $defaultEncrypterName){
+		$this->encrypterManager = $encrypterManager;
+		$this->defaultEncrypterName = $defaultEncrypterName;
 	}
-
+	
 	/**
 	 * @see Twig_Extension::getFilters()
 	 */
@@ -29,21 +35,29 @@ class Encrypter extends Twig_Extension{
 			'decrypt' => new Twig_Filter_Method($this, 'decryptFilter')
 		);
 	}
-
+	
 	/**
 	 * @param string $data
 	 */
-	public function encryptFilter($data){
-		return $this->encrypter->encrypt($data);
+	public function encryptFilter($data, $encrypterName = null){
+		if($encrypterName == null){
+			$encrypterName = $this->defaultEncrypterName;
+		}
+		
+		return $this->encrypterManager->get($encrypterName)->encrypt($data);
 	}
 	
 	/**
 	 * @param string $encryptedData
 	 */
-	public function decryptFilter($encryptedData){
-		return $this->encrypter->decrypt($encryptedData);
+	public function decryptFilter($encryptedData, $encrypterName = null){
+		if($encrypterName == null){
+			$encrypterName = $this->defaultEncrypterName;
+		}
+		
+		return $this->encrypterManager->get($encrypterName)->decrypt($encryptedData);
 	}
-
+	
 	/**
 	 * @see Twig_ExtensionInterface::getName()
 	 */

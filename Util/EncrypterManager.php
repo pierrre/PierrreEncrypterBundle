@@ -57,8 +57,8 @@ class EncrypterManager{
 	 * @throws \Exception
 	 */
 	public function get($name){
-		if(isset($this->encrypters['name'])){
-			$encrypter = $this->encrypters['name'];
+		if(isset($this->encrypters[$name])){
+			$encrypter = $this->encrypters[$name];
 		} else{
 			if(isset($this->configs[$name])){
 				$config = $this->configs[$name];
