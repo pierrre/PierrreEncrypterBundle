@@ -48,8 +48,6 @@ class PierrreEncrypterExtension extends Extension implements ConfigurationInterf
 			
 			$loader->load('twig_extension.yml');
 		}
-		
-		var_dump($container->getParameterBag());die;
 	}
 	
 	/**
@@ -68,9 +66,9 @@ class PierrreEncrypterExtension extends Extension implements ConfigurationInterf
 							->scalarNode('key')->end()
 							->scalarNode('algorithm')->defaultValue(Encrypter::DEFAULT_ALGORITHM)->end()
 							->scalarNode('mode')->defaultValue(Encrypter::DEFAULT_MODE)->end()
-							->scalarNode('random_initialization_vector')->defaultValue(Encrypter::DEFAULT_USE_RANDOM_INITIALIZATION_VECTOR)->end()
-							->scalarNode('base64')->defaultValue(Encrypter::DEFAULT_USE_BASE64)->end()
-							->scalarNode('base64_url_safe')->defaultValue(Encrypter::DEFAULT_USE_BASE64_URL_SAFE)->end()
+							->scalarNode('random_initialization_vector')->defaultValue(Encrypter::DEFAULT_RANDOM_INITIALIZATION_VECTOR)->end()
+							->scalarNode('base64')->defaultValue(Encrypter::DEFAULT_BASE64)->end()
+							->scalarNode('base64_url_safe')->defaultValue(Encrypter::DEFAULT_BASE64_URL_SAFE)->end()
 						->end()
 					->end()
 				->end()

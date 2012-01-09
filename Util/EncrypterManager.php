@@ -60,9 +60,9 @@ class EncrypterManager{
 		if(isset($this->encrypters['name'])){
 			$encrypter = $this->encrypters['name'];
 		} else{
-			if(isset($this->config[$name])){
-				$config = $this->config[$name];
-				$encrypter = new Encrypter($config['key'], $config['mode'], $config['random_initialization_vector'], $config['base64'], $config['base64_url_safe']);
+			if(isset($this->configs[$name])){
+				$config = $this->configs[$name];
+				$encrypter = new Encrypter($config['key'], $config['algorithm'], $config['mode'], $config['random_initialization_vector'], $config['base64'], $config['base64_url_safe']);
 				
 				$this->encrypters[$name] = $encrypter;
 			} else{

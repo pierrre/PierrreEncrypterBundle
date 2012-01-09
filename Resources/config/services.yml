@@ -1,4 +1,4 @@
 services:
-    pierrre_encrypter:
-        class: Pierrre\EncrypterBundle\Util\Encrypter
-        arguments: ["%pierrre_encrypter.key%", "%pierrre_encrypter.algorithm%", "%pierrre_encrypter.mode%", "%pierrre_encrypter.useRandomInitializationVector%", "%pierrre_encrypter.useBase64%", "%pierrre_encrypter.useBase64UrlSafe%"]
+    pierrre_encrypter_manager:
+        class: Pierrre\EncrypterBundle\Util\EncrypterManager
+        arguments: ["%pierrre_encrypter.encrypters%"]
