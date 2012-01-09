@@ -16,13 +16,16 @@ class EncrypterEncryptCommand extends ContainerAwareCommand{
 		
 		$this->setName('pierrre:encrypter:encrypt')
 		->setDescription('Encrypt data')
+		->addArgument('encrypterName', InputArgument::REQUIRED, 'Encrypter name')
 		->addArgument('data', InputArgument::REQUIRED, 'Data to encrypt');
 	}
 	
 	protected function execute(InputInterface $input, OutputInterface $output){
+		$encrypterName = $input->getArgument('encrypterName');
 		$data = $input->getArgument('data');
 		
-		$encryptedData = $this->getContainer()->get('pierrre_encrypter')->encrypt($data);
+		$encrypter = $this->getContainer()->get('pierrre_encrypter_manager')->get($encrypterName);
+		$encryptedData = $encrypter->encrypt($data);
 		
 		$output->writeln($encryptedData);
 	}
