@@ -37,7 +37,7 @@ class PierrreEncrypterExtension extends Extension implements ConfigurationInterf
 		//Twig extension
 		$twig = $config['twig'];
 		if($twig['enabled']){
-			$twigDefaultEncrypter = $twig['defaultEncrypter'];
+			$twigDefaultEncrypter = $twig['default_encrypter'];
 			
 			if($twigDefaultEncrypter == null){
 				$encrypterNames = array_keys($config['encrypters']);
@@ -76,7 +76,7 @@ class PierrreEncrypterExtension extends Extension implements ConfigurationInterf
 					->addDefaultsIfNotSet()
 					->children()
 						->scalarNode('enabled')->defaultFalse()->end()
-						->scalarNode('defaultEncrypter')->defaultNull()->end()
+						->scalarNode('default_encrypter')->defaultNull()->end()
 					->end()
 				->end()
 			->end()
