@@ -3,6 +3,7 @@
 namespace Pierrre\EncrypterBundle\Util;
 
 use \ArrayAccess;
+use \Exception;
 
 class EncrypterManager{
 	private $encrypters;
@@ -46,7 +47,7 @@ class EncrypterManager{
 	 * @return boolean
 	 */
 	public function has($name){
-		return $this->get($name) != null;
+		return isset($this->encrypters[$name]) || isset($this->configs[$name]);
 	}
 	
 	/**
@@ -66,7 +67,7 @@ class EncrypterManager{
 				
 				$this->encrypters[$name] = $encrypter;
 			} else{
-				$encrypter = null;
+				throw new Exception('Unknown encrypter (' . $name . ')');
 			}
 		}
 		
