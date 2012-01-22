@@ -82,7 +82,6 @@ pierrre_encrypter:
         default_encrypter: null #Default encrypter. By default, it's the first encrypter
 ```
 
-  
 Please read the [Mcrypt documentation](http://www.php.net/manual/en/book.mcrypt.php).  
 
 ## Usage
