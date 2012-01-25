@@ -22,13 +22,11 @@ class Encrypter{
 	private $module;
 	private $initializationVectorSize;
 	
+	private $mcryptRandomMethod;
+	private $fixedInitializationVector;
+	
 	/**
-	 * @param string $key
-	 * @param string $algorithm
-	 * @param string $mode
-	 * @param boolean $randomInitializationVector
-	 * @param boolean $base64
-	 * @param boolean $base64UrlSafe
+	 * @param array $options
 	 * 
 	 * @throws \InvalidArgumentException
 	 */
@@ -50,45 +48,50 @@ class Encrypter{
 		if($this->module === false){
 			throw new \InvalidArgumentException('Unknown algorithm/mode');
 		}
+		
 		if(strlen($this->key) == 0){
 			throw new \InvalidArgumentException('The key length must be > 0');
 		} else if(strlen($this->key) > ($keyMaxLength = mcrypt_enc_get_key_size($this->module))){
 			throw new \InvalidArgumentException('The key length must be <= ' . $keyMaxLength . ' for the choosen algorithm (' . $this->algorithm . ')');
 		}
+		
 		$this->initializationVectorSize = mcrypt_enc_get_iv_size($this->module);
+		
+		if($this->randomInitializationVector){
+			$this->mcryptRandomMethod = defined('MCRYPT_DEV_URANDOM') ? MCRYPT_DEV_URANDOM : MCRYPT_DEV_RANDOM; 
+		} else{
+			$this->fixedInitializationVector = '';
+			
+			for($i = 0; $i < $size; $i++){
+				$this->fixedInitializationVector .= self::FIXED_INITIALIZATION_VECTOR_CHAR;
+			}
+		}
+	}
+	
+	public function close(){
+		mcrypt_module_close($this->module);
+		unset($this->module);
 	}
 	
 	/**
-	 * @param string|mixed $data
+	 * @param scalar|object $data
 	 *
 	 * @return string
 	 * 
 	 * @throws \InvalidArgumentException
 	 */
 	public function encrypt($data){
-		//Convert data to string
-		if(!is_string($data)){
-			if(is_scalar($data)){
-				$data = (string)$data;
-			} else if(is_object($data)){
-				if(method_exists($data, '__toString')){
-					$data = (string)$data;
-				} else{
-					throw new \InvalidArgumentException('_toString() method doesn\'t exist for the "data" object');
-				}
-			} else{
-				throw new \InvalidArgumentException('Encryption is not supported for the "' . gettype($data) . '" type');
-			}
-		}
+		$data = self::convertToString($data);
+		
 		if(strlen($data) == 0){
 			throw new \InvalidArgumentException('Encryption doesn\'t support empty string');
 		}
 		
 		//Encryption
 		if($this->randomInitializationVector){
-			$initializationVector = mcrypt_create_iv($this->initializationVectorSize);
+			$initializationVector = mcrypt_create_iv($this->initializationVectorSize, $this->mcryptRandomMethod);
 		} else{
-			$initializationVector = $this->createFixedInitializationVector($this->initializationVectorSize);
+			$initializationVector = $this->fixedInitializationVector;
 		}
 		mcrypt_generic_init($this->module, $this->key, $initializationVector);
 		$encryptedData = mcrypt_generic($this->module, (string)$data);
@@ -152,17 +155,29 @@ class Encrypter{
 	}
 	
 	/**
-	 * @param int $size
+	 * @param mixed $data
 	 * 
 	 * @return string
+	 * 
+	 * @throws \InvalidArgumentException
 	 */
-	private function createFixedInitializationVector($size){
-		$initializationVector = '';
-		
-		for($i = 0; $i < $size; $i++){
-			$initializationVector .= self::FIXED_INITIALIZATION_VECTOR_CHAR;
+	public static function convertToString($data){
+		if(is_string($data)){
+			//Nothing
+		} else if(is_int($data) || is_float($data)){
+			$data = (string)$data;
+		} else if(is_bool($data)){
+			$data = $data ? '1' : '0';
+		} else if(is_object($data)){
+			if(method_exists($data, '__toString')){
+				$data = (string)$data;
+			} else{
+				throw new \InvalidArgumentException('_toString() method doesn\'t exist for the "data" object');
+			}
+		} else{
+			throw new \InvalidArgumentException('Encryption is not supported for the "' . gettype($data) . '" type');
 		}
 		
-		return $initializationVector;
+		return $data;
 	}
 }
