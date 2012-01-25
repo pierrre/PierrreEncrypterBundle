@@ -5,3 +5,7 @@
 /.buildpath
 /.project
 /.settings
+
+#Vendors
+vendor/*
+!vendor/vendors.php
