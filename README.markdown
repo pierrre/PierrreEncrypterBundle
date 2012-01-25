@@ -109,7 +109,7 @@ $decryptedData = $encrypter->decrypt($encryptedData);
 ``` php
 <?php
 use Pierrre\EncrypterBundle\Util\Encrypter;
-$encrypter = new Encrypter('mySecret');
+$encrypter = new Encrypter(array('key' => 'mySecret'));
 ```
 
 ### Twig extension
