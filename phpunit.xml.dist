@@ -20,8 +20,4 @@
 			</exclude>
 		</whitelist>
 	</filter>
-	
-	<logging>
-		<log type="coverage-html" target="Tests/coverage" />
-	</logging>
 </phpunit>
