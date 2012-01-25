@@ -62,7 +62,7 @@ class Encrypter{
 		} else{
 			$this->fixedInitializationVector = '';
 			
-			for($i = 0; $i < $size; $i++){
+			for($i = 0; $i < $this->initializationVectorSize; $i++){
 				$this->fixedInitializationVector .= self::FIXED_INITIALIZATION_VECTOR_CHAR;
 			}
 		}
