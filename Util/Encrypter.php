@@ -32,18 +32,14 @@ class Encrypter{
 	 * 
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($key,
-			$algorithm = self::DEFAULT_ALGORITHM,
-			$mode = self::DEFAULT_MODE,
-			$randomInitializationVector = self::DEFAULT_RANDOM_INITIALIZATION_VECTOR,
-			$base64 = self::DEFAULT_BASE64,
-			$base64UrlSafe = self::DEFAULT_BASE64_URL_SAFE){
-		$this->key = (string)$key;
-		$this->algorithm = (string)$algorithm;
-		$this->mode = (string)$mode;
-		$this->randomInitializationVector = (bool)$randomInitializationVector;
-		$this->base64 = (bool)$base64;
-		$this->base64UrlSafe = (bool)$base64UrlSafe;
+	public function __construct(array $options){
+		//Options
+		$this->key = isset($options['key']) ? (string)$options['key'] : '';
+		$this->algorithm = isset($options['algorithm']) ? (string)$options['algorithm'] : self::DEFAULT_ALGORITHM;
+		$this->mode = isset($options['mode']) ? (string)$options['mode'] : self::DEFAULT_MODE;
+		$this->randomInitializationVector = isset($options['random_initialization_vector']) ? (bool)$options['random_initialization_vector'] : self::DEFAULT_RANDOM_INITIALIZATION_VECTOR;
+		$this->base64 = isset($options['base64']) ? (bool)$options['base64'] : self::DEFAULT_BASE64;
+		$this->base64UrlSafe = isset($options['base64_url_safe']) ? (bool)$options['base64_url_safe'] : self::DEFAULT_BASE64_URL_SAFE;
 		
 		//Initialize encryption
 		try{
