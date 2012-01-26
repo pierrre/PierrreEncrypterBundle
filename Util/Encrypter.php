@@ -133,7 +133,7 @@ class Encrypter{
 				$encryptedData = strtr($encryptedData, self::$BASE64_URL_SAFE_REPLACE[1], self::$BASE64_URL_SAFE_REPLACE[0]);
 			}
 			
-			$encryptedData = base64_decode($encryptedData);
+			$encryptedData = base64_decode($encryptedData, true);
 			
 			if($encryptedData === false){
 				throw new \InvalidArgumentException('Encrypted data is not a valid base64 string');
@@ -143,9 +143,14 @@ class Encrypter{
 		//Encryption
 		if($this->randomInitializationVector){
 			$initializationVector = substr($encryptedData, 0, $this->initializationVectorSize);
+			
+			if(strlen($initializationVector) < $this->initializationVectorSize){
+				throw new \InvalidArgumentException('Encrypted data is not long enough to get the initialization vector');
+			}
+			
 			$encryptedData = substr($encryptedData, $this->initializationVectorSize);
 		} else{
-			$initializationVector = $this->createFixedInitializationVector($this->initializationVectorSize);
+			$initializationVector = $this->fixedInitializationVector;
 		}
 		mcrypt_generic_init($this->module, $this->key, $initializationVector);
 		$data = mdecrypt_generic($this->module, $encryptedData);
