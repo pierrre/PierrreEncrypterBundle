@@ -6,11 +6,49 @@ use Pierrre\EncrypterBundle\Util\Encrypter;
 
 class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testConstructWithInvalidAlgorithm(){
+		$options = $this->getOptions();
+		$options['algorithm'] = 'unknown algorithm';
+		$encrypter = new Encrypter($options);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testConstructWithInvalidMode(){
+		$options = $this->getOptions();
+		$options['mode'] = 'unknown mode';
+		$encrypter = new Encrypter($options);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testConstructWithKeyTooShort(){
+		$options = array(
+			'key' => ''
+		);
+		$encrypter = new Encrypter($options);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testConstructWithKeyTooLong(){
+		$options = array(
+			'key' => 'this key is too loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong'
+		);
+		$encrypter = new Encrypter($options);
+	}
+	
+	/**
 	 * @param mixed $data
 	 * 
-	 * @dataProvider supportedTypeProvider
+	 * @dataProvider supportedDataTypeProvider
 	 */
-	public function testSupportedType($data){
+	public function testEncryptDecryptWithSupportedDataType($data){
 		$options = $this->getOptions();
 		$encrypter = new Encrypter($options);
 		
@@ -22,14 +60,51 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
 	}
 	
+	public function testEncryptDecryptWithRandomInitializationVector(){
+		$options = $this->getOptions();
+		$options['random_initialization_vector'] = true;
+		$encrypter = new Encrypter($options);
+	
+		$data = 'foobar';
+		
+		$encryptedData1 = $encrypter->encrypt($data);
+		$encryptedData2 = $encrypter->encrypt($data);
+		
+		$this->assertNotEquals($encryptedData1, $encryptedData2);
+		
+		$decryptedData1 = $encrypter->decrypt($encryptedData1);
+		$decryptedData2 = $encrypter->decrypt($encryptedData2);
+		
+		$this->assertEquals($data, $decryptedData1);
+		$this->assertEquals($decryptedData1, $decryptedData2);
+	}
+	
+	public function testEncryptDecryptWithFixedInitializationVector(){
+		$options = $this->getOptions();
+		$options['random_initialization_vector'] = false;
+		$encrypter = new Encrypter($options);
+	
+		$data = 'foobar';
+		$encryptedData1 = $encrypter->encrypt($data);
+		$encryptedData2 = $encrypter->encrypt($data);
+	
+		$this->assertEquals($encryptedData1, $encryptedData2);
+		
+		$decryptedData1 = $encrypter->decrypt($encryptedData1);
+		$decryptedData2 = $encrypter->decrypt($encryptedData2);
+		
+		$this->assertEquals($data, $decryptedData1);
+		$this->assertEquals($decryptedData1, $decryptedData2);
+	}
+	
 	/**
 	 * @param mixed $data
 	 *
-	 * @dataProvider unsupportedTypeProvider
+	 * @dataProvider unsupportedDataTypeProvider
 	 * 
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testUnsupportedType($data){
+	public function testEncryptWithUnsupportedDataType($data){
 		$options = $this->getOptions();
 		$encrypter = new Encrypter($options);
 	
@@ -39,69 +114,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testWithInvalidAlgorithm(){
-		$options = $this->getOptions();
-		$options['algorithm'] = 'unknown algorithm';
-		$encrypter = new Encrypter($options);
-	}
-	
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testWithInvalidMode(){
-		$options = $this->getOptions();
-		$options['mode'] = 'unknown mode';
-		$encrypter = new Encrypter($options);
-	}
-	
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testWithKeyTooShort(){
-		$options = array(
-			'key' => ''
-		);
-		$encrypter = new Encrypter($options);
-	}
-	
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testWithKeyTooLong(){
-		$options = array(
-			'key' => 'this key is too loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong'
-		);
-		$encrypter = new Encrypter($options);
-	}
-	
-	public function testWithRandomInitializationVector(){
-		$options = $this->getOptions();
-		$options['random_initialization_vector'] = true;
-		$encrypter = new Encrypter($options);
-		
-		$data = 'foobar';
-		$encryptedData1 = $encrypter->encrypt($data);
-		$encryptedData2 = $encrypter->encrypt($data);
-		
-		$this->assertNotEquals($encryptedData1, $encryptedData2);
-	}
-	
-	public function testWithFixedInitializationVector(){
-		$options = $this->getOptions();
-		$options['random_initialization_vector'] = false;
-		$encrypter = new Encrypter($options);
-		
-		$data = 'foobar';
-		$encryptedData1 = $encrypter->encrypt($data);
-		$encryptedData2 = $encrypter->encrypt($data);
-		
-		$this->assertEquals($encryptedData1, $encryptedData2);
-	}
-	
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testWithEmptyData(){
+	public function testEncryptWithEmptyData(){
 		$options = $this->getOptions();
 		$encrypter = new Encrypter($options);
 		
@@ -109,7 +122,45 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$encrypter->encrypt($data);
 	}
 	
-	public function supportedTypeProvider(){
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testDecryptWithEncryptedDataNotString(){
+		$options = $this->getOptions();
+		$encrypter = new Encrypter($options);
+		
+		$encryptedData = false;
+		$encrypter->decrypt($encryptedData);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testDecryptWithEncryptedDataInvalidBase64(){
+		$options = $this->getOptions();
+		$options['base64'] = true;
+		$options['base64_url_safe'] = true;
+		$encrypter = new Encrypter($options);
+	
+		$encryptedData = '&é(|)]';
+		$encrypter->decrypt($encryptedData);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testDecryptWithEncryptedDataNotLongEnoughToGetIV(){
+		$options = $this->getOptions();
+		$options['base64'] = false;
+		$options['base64_url_safe'] = false;
+		$options['random_initialization_vector'] = true;
+		$encrypter = new Encrypter($options);
+		
+		$encryptedData = 'a';
+		$encrypter->decrypt($encryptedData);
+	}
+	
+	public function supportedDataTypeProvider(){
 		return array(
 			//String
 			array('a'),
@@ -134,7 +185,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		);
 	}
 	
-	public function unsupportedTypeProvider(){
+	public function unsupportedDataTypeProvider(){
 		return array(
 			//Array
 			array(array(1, 2 ,3)),
