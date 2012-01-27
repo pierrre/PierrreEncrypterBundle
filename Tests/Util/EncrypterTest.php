@@ -7,63 +7,81 @@ use Pierrre\EncrypterBundle\Util\Encrypter;
 class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	const LOREM_IPSUM = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::__construct
+	 */
 	public function testConstruct(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$encrypter = new Encrypter($options);
 	}
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::__construct
+	 */
 	public function testConstructWithInitializationVectorRandom(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['random_initialization_vector'] = true;
 		$encrypter = new Encrypter($options);
 	}
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::__construct
+	 */
 	public function testConstructWithInitializationVectorFixed(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['random_initialization_vector'] = false;
 		$encrypter = new Encrypter($options);
 	}
 	
 	/**
 	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::__construct
 	 */
 	public function testConstructWithAlgorithmInvalid(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['algorithm'] = 'unknown algorithm';
 		$encrypter = new Encrypter($options);
 	}
 	
 	/**
 	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::__construct
 	 */
 	public function testConstructWithModeInvalid(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['mode'] = 'unknown mode';
 		$encrypter = new Encrypter($options);
 	}
 	
 	/**
 	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::__construct
 	 */
 	public function testConstructWithKeyTooShort(){
-		$options = array(
-			'key' => ''
-		);
+		$options = self::getBaseOptions();
+		$options['key'] = '';
 		$encrypter = new Encrypter($options);
 	}
 	
 	/**
 	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::__construct
 	 */
 	public function testConstructWithKeyTooLong(){
-		$options = array(
-			'key' => 'this key is too loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong'
-		);
+		$options = self::getBaseOptions();
+		$options['key'] = 'this key is too loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong';
 		$encrypter = new Encrypter($options);
 	}
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::close
+	 */
 	public function testClose(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$encrypter = new Encrypter($options);
 		
 		$encrypter->close();
@@ -73,9 +91,12 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	 * @param mixed $data
 	 * 
 	 * @dataProvider supportedDataTypeProvider
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
 	 */
 	public function testEncryptDecrypt($data){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$encrypter = new Encrypter($options);
 		
 		$encryptedData = $encrypter->encrypt($data);
@@ -84,11 +105,15 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
 	}
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
+	 */
 	public function testEncryptDecryptWithInitializationVectorRandom(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['random_initialization_vector'] = true;
 		$encrypter = new Encrypter($options);
-	
+		
 		$data = 'foobar';
 		
 		$encryptedData1 = $encrypter->encrypt($data);
@@ -103,8 +128,12 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$this->assertEquals($decryptedData1, $decryptedData2);
 	}
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
+	 */
 	public function testEncryptDecryptWithInitializationVectorFixed(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['random_initialization_vector'] = false;
 		$encrypter = new Encrypter($options);
 	
@@ -121,8 +150,12 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$this->assertEquals($decryptedData1, $decryptedData2);
 	}
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
+	 */
 	public function testEncryptDecryptWithBase64True(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['base64'] = true;
 		$encrypter = new Encrypter($options);
 		
@@ -136,8 +169,12 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
 	}
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
+	 */
 	public function testEncryptDecryptWithBase64False(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['base64'] = false;
 		$encrypter = new Encrypter($options);
 	
@@ -152,8 +189,12 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
 	}
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
+	 */
 	public function testEncryptDecryptWithBase64UrlSafeTrue(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['base64'] = true;
 		$options['base64_url_safe'] = true;
 		$encrypter = new Encrypter($options);
@@ -168,8 +209,12 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
 	}
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
+	 */
 	public function testEncryptDecryptWithBase64UrlSafeFalse(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['base64'] = true;
 		$options['base64_url_safe'] = false;
 		$encrypter = new Encrypter($options);
@@ -186,9 +231,12 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	
 	/**
 	 * @expectedException BadMethodCallException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::checkClosed
 	 */
 	public function testEncryptWithEncrypterClosed(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$encrypter = new Encrypter($options);
 		
 		$encrypter->close();
@@ -199,9 +247,11 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	
 	/**
 	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
 	 */
 	public function testEncryptWithEmptyData(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$encrypter = new Encrypter($options);
 		
 		$data = '';
@@ -210,9 +260,12 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	
 	/**
 	 * @expectedException BadMethodCallException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::checkClosed
 	 */
 	public function testDecryptWithEncrypterClosed(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$encrypter = new Encrypter($options);
 		
 		$data = 'foobar';
@@ -225,9 +278,11 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	
 	/**
 	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
 	 */
 	public function testDecryptWithEncryptedDataNotString(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$encrypter = new Encrypter($options);
 		
 		$encryptedData = false;
@@ -236,9 +291,11 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	
 	/**
 	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
 	 */
 	public function testDecryptWithEncryptedDataInvalidBase64(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['base64'] = true;
 		$options['base64_url_safe'] = true;
 		$encrypter = new Encrypter($options);
@@ -249,9 +306,11 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	
 	/**
 	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
 	 */
 	public function testDecryptWithEncryptedDataNotLongEnoughToGetIV(){
-		$options = $this->getOptions();
+		$options = self::getBaseOptions();
 		$options['base64'] = false;
 		$options['base64_url_safe'] = false;
 		$options['random_initialization_vector'] = true;
@@ -265,6 +324,8 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	 * @param scalar|object $data
 	 * 
 	 * @dataProvider supportedDataTypeProvider
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::convertToString
 	 */
 	public function testConvertToString($data){
 		$string = Encrypter::convertToString($data);
@@ -304,6 +365,8 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	 * @dataProvider unsupportedDataTypeProvider
 	 *
 	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::convertToString
 	 */
 	public function testConvertToStringWithDataUnsupportedType($data){
 		$string = Encrypter::convertToString($data);
@@ -322,7 +385,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		);
 	}
 	
-	protected function getOptions(){
+	public static function getBaseOptions(){
 		return array(
 			'key' => 'foobar'
 		);
