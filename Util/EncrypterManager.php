@@ -73,4 +73,11 @@ class EncrypterManager{
 		
 		return $encrypter;
 	}
+	
+	/**
+	 * @param mixed $name
+	 */
+	private function checkNameIsString($name){
+		
+	}
 }
