@@ -5,10 +5,29 @@ namespace Pierrre\EncrypterBundle\Tests\Util;
 use Pierrre\EncrypterBundle\Util\Encrypter;
 
 class EncrypterTest extends \PHPUnit_Framework_TestCase{
+	const LOREM_IPSUM = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+	
+	public function testConstruct(){
+		$options = $this->getOptions();
+		$encrypter = new Encrypter($options);
+	}
+	
+	public function testConstructWithInitializationVectorRandom(){
+		$options = $this->getOptions();
+		$options['random_initialization_vector'] = true;
+		$encrypter = new Encrypter($options);
+	}
+	
+	public function testConstructWithInitializationVectorFixed(){
+		$options = $this->getOptions();
+		$options['random_initialization_vector'] = false;
+		$encrypter = new Encrypter($options);
+	}
+	
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testConstructWithInvalidAlgorithm(){
+	public function testConstructWithAlgorithmInvalid(){
 		$options = $this->getOptions();
 		$options['algorithm'] = 'unknown algorithm';
 		$encrypter = new Encrypter($options);
@@ -17,7 +36,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	/**
 	 * @expectedException InvalidArgumentException
 	 */
-	public function testConstructWithInvalidMode(){
+	public function testConstructWithModeInvalid(){
 		$options = $this->getOptions();
 		$options['mode'] = 'unknown mode';
 		$encrypter = new Encrypter($options);
@@ -43,24 +62,29 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$encrypter = new Encrypter($options);
 	}
 	
+	public function testClose(){
+		$options = $this->getOptions();
+		$encrypter = new Encrypter($options);
+		
+		$encrypter->close();
+	}
+	
 	/**
 	 * @param mixed $data
 	 * 
 	 * @dataProvider supportedDataTypeProvider
 	 */
-	public function testEncryptDecryptWithSupportedDataType($data){
+	public function testEncryptDecrypt($data){
 		$options = $this->getOptions();
 		$encrypter = new Encrypter($options);
 		
 		$encryptedData = $encrypter->encrypt($data);
 		$decryptedData = $encrypter->decrypt($encryptedData);
 		
-		$encrypter->close();
-		
 		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
 	}
 	
-	public function testEncryptDecryptWithRandomInitializationVector(){
+	public function testEncryptDecryptWithInitializationVectorRandom(){
 		$options = $this->getOptions();
 		$options['random_initialization_vector'] = true;
 		$encrypter = new Encrypter($options);
@@ -79,7 +103,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$this->assertEquals($decryptedData1, $decryptedData2);
 	}
 	
-	public function testEncryptDecryptWithFixedInitializationVector(){
+	public function testEncryptDecryptWithInitializationVectorFixed(){
 		$options = $this->getOptions();
 		$options['random_initialization_vector'] = false;
 		$encrypter = new Encrypter($options);
@@ -97,18 +121,67 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$this->assertEquals($decryptedData1, $decryptedData2);
 	}
 	
-	/**
-	 * @param mixed $data
-	 *
-	 * @dataProvider unsupportedDataTypeProvider
-	 * 
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testEncryptWithUnsupportedDataType($data){
+	public function testEncryptDecryptWithBase64True(){
 		$options = $this->getOptions();
+		$options['base64'] = true;
+		$encrypter = new Encrypter($options);
+		
+		$data = 'foobar';
+		$encryptedData = $encrypter->encrypt($data);
+		
+		$this->assertNotContains($encryptedData, '=');
+		
+		$decryptedData = $encrypter->decrypt($encryptedData);
+		
+		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
+	}
+	
+	public function testEncryptDecryptWithBase64False(){
+		$options = $this->getOptions();
+		$options['base64'] = false;
 		$encrypter = new Encrypter($options);
 	
+		$data = self::LOREM_IPSUM;
 		$encryptedData = $encrypter->encrypt($data);
+		
+		$this->assertNotRegExp('/^[A-Za-z0-9+\/]*$/', $encryptedData);
+		$this->assertNotRegExp('/^[A-Za-z0-9-_]*$/', $encryptedData);
+		
+		$decryptedData = $encrypter->decrypt($encryptedData);
+	
+		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
+	}
+	
+	public function testEncryptDecryptWithBase64UrlSafeTrue(){
+		$options = $this->getOptions();
+		$options['base64'] = true;
+		$options['base64_url_safe'] = true;
+		$encrypter = new Encrypter($options);
+		
+		$data = self::LOREM_IPSUM;
+		$encryptedData = $encrypter->encrypt($data);
+		
+		$this->assertRegExp('/^[A-Za-z0-9-_]*$/', $encryptedData);
+		
+		$decryptedData = $encrypter->decrypt($encryptedData);
+		
+		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
+	}
+	
+	public function testEncryptDecryptWithBase64UrlSafeFalse(){
+		$options = $this->getOptions();
+		$options['base64'] = true;
+		$options['base64_url_safe'] = false;
+		$encrypter = new Encrypter($options);
+	
+		$data = self::LOREM_IPSUM;
+		$encryptedData = $encrypter->encrypt($data);
+		
+		$this->assertRegExp('/^[A-Za-z0-9+\/]*$/', $encryptedData);
+		
+		$decryptedData = $encrypter->decrypt($encryptedData);
+	
+		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
 	}
 	
 	/**
@@ -160,39 +233,62 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$encrypter->decrypt($encryptedData);
 	}
 	
+	/**
+	 * @param scalar|object $data
+	 * 
+	 * @dataProvider supportedDataTypeProvider
+	 */
+	public function testConvertToString($data){
+		$string = Encrypter::convertToString($data);
+		
+		$this->assertInternalType('string', $string);
+	}
+	
 	public function supportedDataTypeProvider(){
 		return array(
 			//String
 			array('a'),
 			array('azertyuiop'),
-			
+			array(self::LOREM_IPSUM),
+
 			//Boolean
 			array(true),
 			array(false),
-			
+
 			//Integer
 			array(0),
 			array(3),
 			array(-6),
-			
+
 			//Float
 			array(0.0),
 			array(3.7),
 			array(-7.3),
-			
+
 			//Object
 			array(new ClassWithToStringMethod()),
 		);
+	}
+	
+	/**
+	 * @param mixed $data
+	 *
+	 * @dataProvider unsupportedDataTypeProvider
+	 *
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testConvertToStringWithDataUnsupportedType($data){
+		$string = Encrypter::convertToString($data);
 	}
 	
 	public function unsupportedDataTypeProvider(){
 		return array(
 			//Array
 			array(array(1, 2 ,3)),
-			
+				
 			//Object without __toString() method
 			array(new ClassWithoutToStringMethod()),
-			
+				
 			//Null
 			array(null),
 		);
