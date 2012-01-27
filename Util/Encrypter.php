@@ -73,6 +73,12 @@ class Encrypter{
 		unset($this->module);
 	}
 	
+	private function checkClosed(){
+		if(!isset($this->module)){
+			throw new \BadMethodCallException('The encrypter is closed');
+		}
+	}
+	
 	/**
 	 * @param scalar|object $data
 	 *
@@ -81,6 +87,8 @@ class Encrypter{
 	 * @throws \InvalidArgumentException
 	 */
 	public function encrypt($data){
+		$this->checkClosed();
+		
 		$data = self::convertToString($data);
 		
 		if(strlen($data) == 0){
@@ -122,6 +130,8 @@ class Encrypter{
 	 * @throws \InvalidArgumentException
 	 */
 	public function decrypt($encryptedData){
+		$this->checkClosed();
+		
 		//Check encrypted data
 		if(!is_string($encryptedData)){
 			throw new \InvalidArgumentException('Encrypted data must be a string');

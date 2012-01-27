@@ -185,6 +185,19 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	}
 	
 	/**
+	 * @expectedException BadMethodCallException
+	 */
+	public function testEncryptWithEncrypterClosed(){
+		$options = $this->getOptions();
+		$encrypter = new Encrypter($options);
+		
+		$encrypter->close();
+		
+		$data = 'foobar';
+		$encrypter->encrypt($data);
+	}
+	
+	/**
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testEncryptWithEmptyData(){
@@ -196,6 +209,21 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	}
 	
 	/**
+	 * @expectedException BadMethodCallException
+	 */
+	public function testDecryptWithEncrypterClosed(){
+		$options = $this->getOptions();
+		$encrypter = new Encrypter($options);
+		
+		$data = 'foobar';
+		$encryptedData = $encrypter->encrypt($data);
+		
+		$encrypter->close();
+		
+		$decryptedData = $encrypter->decrypt($encryptedData);
+	}
+	
+	/**
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testDecryptWithEncryptedDataNotString(){
@@ -203,7 +231,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$encrypter = new Encrypter($options);
 		
 		$encryptedData = false;
-		$encrypter->decrypt($encryptedData);
+		$decryptedData = $encrypter->decrypt($encryptedData);
 	}
 	
 	/**
@@ -216,7 +244,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$encrypter = new Encrypter($options);
 	
 		$encryptedData = '&é(|)]';
-		$encrypter->decrypt($encryptedData);
+		$decryptedData = $encrypter->decrypt($encryptedData);
 	}
 	
 	/**
@@ -230,7 +258,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$encrypter = new Encrypter($options);
 		
 		$encryptedData = 'a';
-		$encrypter->decrypt($encryptedData);
+		$decryptedData = $encrypter->decrypt($encryptedData);
 	}
 	
 	/**
