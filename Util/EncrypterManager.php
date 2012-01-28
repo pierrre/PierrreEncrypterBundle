@@ -53,6 +53,8 @@ class EncrypterManager{
 	
 	/**
 	 * @param string $name
+	 * 
+	 * @throws \InvalidArgumentException
 	 */
 	private function checkNameIsString($name){
 		if(!is_string($name)){
