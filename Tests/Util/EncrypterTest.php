@@ -88,6 +88,21 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	}
 	
 	/**
+	 * @expectedException BadMethodCallException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::close
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::checkClosed
+	 */
+	public function testCloseWithEncrypterAlreadyClosed(){
+		$options = self::getBaseOptions();
+		$encrypter = new Encrypter($options);
+	
+		$encrypter->close();
+		
+		$encrypter->close();
+	}
+	
+	/**
 	 * @param mixed $data
 	 * 
 	 * @dataProvider supportedDataTypeProvider

@@ -69,6 +69,8 @@ class Encrypter{
 	}
 	
 	public function close(){
+		$this->checkClosed();
+		
 		mcrypt_module_close($this->module);
 		unset($this->module);
 	}
