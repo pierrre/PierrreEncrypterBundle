@@ -16,43 +16,90 @@ class EncrypterManagerTest extends \PHPUnit_Framework_TestCase{
 		$manager = new EncrypterManager($configs);
 	}
 	
-	/**
-	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::__construct
-	 */
-	public function testConstructWithoutConfigs(){
+	public function testConstructWithConfigsDefault(){
 		$manager = new EncrypterManager();
 	}
 	
 	/**
-	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::add
+	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::has
 	 */
-	public function testAdd(){
-		$manager = new EncrypterManager();
-		
-		$encrypter = self::createBasicEncrypter();
-		$manager->add('encrypter', $encrypter);
+	public function testHas(){
+		$configs = array(
+			'encrypter' => self::getEncrypterBaseOptions(),
+		);
+		$manager = new EncrypterManager($configs);
 		
 		$this->assertTrue($manager->has('encrypter'));
+		$this->assertFalse($manager->has('unknown_encrypter'));
 	}
 	
 	/**
-	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::remove
+	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::has
 	 */
-	public function testRemove(){
+	public function testHasWithEncrypterUnknown(){
 		$manager = new EncrypterManager();
 		
-		$encrypter = self::createBasicEncrypter();
-		$manager->add('encrypter', $encrypter);
-		
-		$encrypterRemoved = $manager->remove('encrypter');
-		
-		$this->assertEquals($encrypter, $encrypterRemoved);
-		
-		$this->assertFalse($manager->has('encrypter'));
+		$this->assertFalse($manager->has('unknown_encrypter'));
 	}
 	
-	private static function createBasicEncrypter(){
-		return new Encrypter(self::getEncrypterBaseOptions());
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::get
+	 */
+	public function testGet(){
+		$configs = array(
+			'encrypter' => self::getEncrypterBaseOptions(),
+		);
+		$manager = new EncrypterManager($configs);
+		
+		$encrypter = $manager->get('encrypter');
+		
+		$this->assertInstanceOf('Pierrre\EncrypterBundle\Util\Encrypter', $encrypter);
+	}
+	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::get
+	 */
+	public function testGetWithEncrypterInCache(){
+		$configs = array(
+			'encrypter' => self::getEncrypterBaseOptions(),
+		);
+		$manager = new EncrypterManager($configs);
+	
+		$encrypter = $manager->get('encrypter');
+		$encrypter = $manager->get('encrypter');
+	
+		$this->assertInstanceOf('Pierrre\EncrypterBundle\Util\Encrypter', $encrypter);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::get
+	 */
+	public function testGetWithEncrypterUnknown(){
+		$manager = new EncrypterManager();
+		
+		$encrypter = $manager->get('unknown_encrypter');
+	}
+	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::checkNameIsString
+	 */
+	public function testCheckNameIsString(){
+		$manager = new EncrypterManager();
+	
+		$manager->has('encrypter');
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::checkNameIsString
+	 */
+	public function testCheckNameIsStringWithNameNotString(){
+		$manager = new EncrypterManager();
+	
+		$manager->has(new \stdClass());
 	}
 	
 	private static function getEncrypterBaseOptions(){
