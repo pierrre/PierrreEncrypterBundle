@@ -40,7 +40,7 @@ class EncrypterManager{
 		} else{
 			if(isset($this->configs[$name])){
 				$config = $this->configs[$name];
-				$encrypter = new Encrypter($config);
+				$encrypter = new ManagedEncrypter($config);
 				
 				$this->encrypters[$name] = $encrypter;
 			} else{
@@ -60,5 +60,14 @@ class EncrypterManager{
 		if(!is_string($name)){
 			throw new \InvalidArgumentException('Encrypter name is not a string');
 		}
+	}
+}
+
+class ManagedEncrypter extends Encrypter{
+	/**
+	 * @see Pierrre\EncrypterBundle\Util.Encrypter::close()
+	 */
+	public function close(){
+		throw new \BadMethodCallException('close() method is not supported for a ManagedEncrypter');
 	}
 }

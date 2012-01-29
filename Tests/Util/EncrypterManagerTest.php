@@ -102,6 +102,22 @@ class EncrypterManagerTest extends \PHPUnit_Framework_TestCase{
 		$manager->has(new \stdClass());
 	}
 	
+	/**
+	 * @expectedException BadMethodCallException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\ManagedEncrypter::close
+	 */
+	public function testManagedEncrypterClose(){
+		$configs = array(
+			'encrypter' => self::getEncrypterBaseOptions(),
+		);
+		$manager = new EncrypterManager($configs);
+		
+		$encrypter = $manager->get('encrypter');
+		
+		$encrypter->close();
+	}
+	
 	private static function getEncrypterBaseOptions(){
 		return EncrypterTest::getBaseOptions();
 	}
