@@ -8,9 +8,20 @@ class EncrypterManager{
 	
 	/**
 	 * @param array $configs
+	 * 
+	 * @throws \InvalidArgumentException
 	 */
 	public function __construct(array $configs = array()){
 		$this->encrypters = array();
+		
+		//Check configs name
+		foreach($configs as $name => $config){
+			$this->checkNameIsString($name);
+			
+			if(!is_array($config)){
+				throw new \InvalidArgumentException('Encrypter config is not an array');
+			}
+		}
 		$this->configs = $configs;
 	}
 	
@@ -30,7 +41,7 @@ class EncrypterManager{
 	 * 
 	 * @return Pierrre\EncrypterBundle\Util\Encrypter
 	 * 
-	 * @throws \Exception
+	 * @throws \InvalidArgumentException
 	 */
 	public function get($name){
 		$this->checkNameIsString($name);

@@ -16,8 +16,36 @@ class EncrypterManagerTest extends \PHPUnit_Framework_TestCase{
 		$manager = new EncrypterManager($configs);
 	}
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::__construct
+	 */
 	public function testConstructWithConfigsDefault(){
 		$manager = new EncrypterManager();
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::__construct
+	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::checkNameIsString
+	 */
+	public function testConstructWithConfigNameNotString(){
+		$configs = array(
+			0 => self::getEncrypterBaseOptions(),
+		);
+		$manager = new EncrypterManager($configs);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\EncrypterManager::__construct
+	 */
+	public function testConstructWithConfigNotArray(){
+		$configs = array(
+			'encrypter' => new \stdClass(),
+		);
+		$manager = new EncrypterManager($configs);
 	}
 	
 	/**
@@ -64,7 +92,7 @@ class EncrypterManagerTest extends \PHPUnit_Framework_TestCase{
 			'encrypter' => self::getEncrypterBaseOptions(),
 		);
 		$manager = new EncrypterManager($configs);
-	
+		
 		$encrypter = $manager->get('encrypter');
 		$encrypter = $manager->get('encrypter');
 	
