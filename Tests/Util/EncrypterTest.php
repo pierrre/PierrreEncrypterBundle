@@ -38,6 +38,17 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	 * 
 	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::__construct
 	 */
+	public function testConstructWithModeNotSupported(){
+		$options = self::getBaseOptions();
+		$options['mode'] = MCRYPT_MODE_STREAM;
+		$encrypter = new Encrypter($options);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::__construct
+	 */
 	public function testConstructWithAlgorithmInvalid(){
 		$options = self::getBaseOptions();
 		$options['algorithm'] = 'unknown algorithm';
@@ -157,6 +168,53 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 			//Object
 			array(new ClassWithToStringMethod()),
 		);
+	}
+	
+	/**
+	 * @dataProvider providerAlgorithmMode
+	 * 
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
+	 */
+	public function testEncryptDecryptWithAlgorithmMode($algorithm, $mode){
+		$keySize = mcrypt_get_key_size($algorithm, $mode);
+		$availableChars = '0123456789abcdefghijklmnopqrstuvwxyz';
+		$availableCharsCount = strlen($availableChars);
+		$key = '';
+		for($i = 0; $i < $keySize; $i++){
+			$key .= $availableChars[mt_rand(0, $availableCharsCount - 1)];
+		}
+		
+		$options = array(
+			'key' => $key,
+			'algorithm' => $algorithm,
+			'mode' => $mode
+		);
+		$encrypter = new Encrypter($options);
+		
+		$data = self::LOREM_IPSUM;
+		
+		$encryptedData = $encrypter->encrypt($data);
+		$decryptedData = $encrypter->decrypt($encryptedData);
+		
+		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
+	}
+	
+	public function providerAlgorithmMode(){
+		$algorithms = mcrypt_list_algorithms();
+		$modes = mcrypt_list_modes();
+		
+		$data = array();
+		
+		foreach($algorithms as $algorithm){
+			foreach($modes as $mode){
+				if($mode != MCRYPT_MODE_STREAM && @mcrypt_get_key_size($algorithm, $mode) !== false){ //Test algorithm/mode availability
+					$data[] = array($algorithm, $mode);
+				}
+			}
+		}
+		
+		return $data;
 	}
 	
 	/**
