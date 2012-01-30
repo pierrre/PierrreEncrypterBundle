@@ -96,10 +96,25 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	public function testCloseWithEncrypterAlreadyClosed(){
 		$options = self::getBaseOptions();
 		$encrypter = new Encrypter($options);
-	
+		
 		$encrypter->close();
 		
 		$encrypter->close();
+	}
+	
+	/**
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
+	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
+	 */
+	public function testEncryptDecrypt(){
+		$options = self::getBaseOptions();
+		$encrypter = new Encrypter($options);
+		
+		$data = 'foobar';
+		$encryptedData = $encrypter->encrypt($data);
+		$decryptedData = $encrypter->decrypt($encryptedData);
+		
+		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
 	}
 	
 	/**
@@ -108,7 +123,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
 	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
 	 */
-	public function testEncryptDecrypt($data){
+	public function testEncryptDecryptWithSupportedDataType($data){
 		$options = self::getBaseOptions();
 		$encrypter = new Encrypter($options);
 		
@@ -116,6 +131,32 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$decryptedData = $encrypter->decrypt($encryptedData);
 		
 		$this->assertEquals(Encrypter::convertToString($data), $decryptedData);
+	}
+	
+	public function providerSupportedDataType(){
+		return array(
+			//String
+			array('a'),
+			array('azertyuiop'),
+			array(self::LOREM_IPSUM),
+			
+			//Boolean
+			array(true),
+			array(false),
+			
+			//Integer
+			array(0),
+			array(3),
+			array(-6),
+			
+			//Float
+			array(0.0),
+			array(3.7),
+			array(-7.3),
+			
+			//Object
+			array(new ClassWithToStringMethod()),
+		);
 	}
 	
 	/**
@@ -138,7 +179,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$decryptedData2 = $encrypter->decrypt($encryptedData2);
 		
 		$this->assertEquals($data, $decryptedData1);
-		$this->assertEquals($decryptedData1, $decryptedData2);
+		$this->assertEquals($data, $decryptedData2);
 	}
 	
 	/**
@@ -342,32 +383,6 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$string = Encrypter::convertToString($data);
 		
 		$this->assertInternalType('string', $string);
-	}
-	
-	public function providerSupportedDataType(){
-		return array(
-			//String
-			array('a'),
-			array('azertyuiop'),
-			array(self::LOREM_IPSUM),
-
-			//Boolean
-			array(true),
-			array(false),
-
-			//Integer
-			array(0),
-			array(3),
-			array(-6),
-
-			//Float
-			array(0.0),
-			array(3.7),
-			array(-7.3),
-
-			//Object
-			array(new ClassWithToStringMethod()),
-		);
 	}
 	
 	/**
