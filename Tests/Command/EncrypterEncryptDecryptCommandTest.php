@@ -12,12 +12,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class EncrypterEncryptDecryptCommandTest extends \PHPUnit_Framework_TestCase{
 	/**
-	 * @dataProvider providerEncryptDecrypt
-	 * 
 	 * @covers Pierrre\EncrypterBundle\Command\EncrypterEncryptCommand
 	 * @covers Pierrre\EncrypterBundle\Command\EncrypterDecryptCommand
 	 */
-	public function testEncryptDecrypt(ContainerInterface $container){
+	public function testEncryptDecrypt(){
+		$configs = array(
+			'encrypter' => array(
+				'key' => 'secret'
+			)
+		);
+		$encrypterManager = new EncrypterManager($configs);
+		
+		$container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+		$container
+		->expects($this->any())
+		->method('get')
+		->with('pierrre_encrypter.manager')
+		->will($this->returnValue($encrypterManager));
+		
 		$data = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 		
 		$encryptCommand = new EncrypterEncryptCommand();
@@ -41,26 +53,6 @@ class EncrypterEncryptDecryptCommandTest extends \PHPUnit_Framework_TestCase{
 		$decryptedData = $output->getContent();
 		
 		$this->assertEquals($data, $decryptedData);
-	}
-	
-	public function providerEncryptDecrypt(){
-		$configs = array(
-			'encrypter' => array(
-				'key' => 'secret'
-			)
-		);
-		$encrypterManager = new EncrypterManager($configs);
-		
-		$container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-		$container
-		->expects($this->any())
-		->method('get')
-		->with('pierrre_encrypter.manager')
-		->will($this->returnValue($encrypterManager));
-		
-		return array(
-			array($container)
-		);
 	}
 }
 

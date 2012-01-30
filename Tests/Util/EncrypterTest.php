@@ -103,9 +103,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	}
 	
 	/**
-	 * @param mixed $data
-	 * 
-	 * @dataProvider supportedDataTypeProvider
+	 * @dataProvider providerSupportedDataType
 	 * 
 	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::encrypt
 	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::decrypt
@@ -336,9 +334,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	}
 	
 	/**
-	 * @param scalar|object $data
-	 * 
-	 * @dataProvider supportedDataTypeProvider
+	 * @dataProvider providerSupportedDataType
 	 * 
 	 * @covers Pierrre\EncrypterBundle\Util\Encrypter::convertToString
 	 */
@@ -348,7 +344,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$this->assertInternalType('string', $string);
 	}
 	
-	public function supportedDataTypeProvider(){
+	public function providerSupportedDataType(){
 		return array(
 			//String
 			array('a'),
@@ -375,9 +371,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	}
 	
 	/**
-	 * @param mixed $data
-	 *
-	 * @dataProvider unsupportedDataTypeProvider
+	 * @dataProvider providerUnsupportedDataType
 	 *
 	 * @expectedException InvalidArgumentException
 	 * 
@@ -387,7 +381,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 		$string = Encrypter::convertToString($data);
 	}
 	
-	public function unsupportedDataTypeProvider(){
+	public function providerUnsupportedDataType(){
 		return array(
 			//Array
 			array(array(1, 2 ,3)),

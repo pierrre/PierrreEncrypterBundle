@@ -8,11 +8,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class PierrreEncrypterExtensionTest extends \PHPUnit_Framework_TestCase{
 	/**
-	 * @dataProvider providerLoad
-	 * 
 	 * @covers Pierrre\EncrypterBundle\DependencyInjection\PierrreEncrypterExtension::load
 	 */
-	public function testLoad(PierrreEncrypterExtension $extension, ContainerBuilder $containerBuilder){
+	public function testLoad(){
+		$extension = new PierrreEncrypterExtension();
+		$containerBuilder = $this->getContainerBuilder();
+		
 		$configs = array(
 			array(
 				'encrypters' => array(
@@ -40,11 +41,12 @@ class PierrreEncrypterExtensionTest extends \PHPUnit_Framework_TestCase{
 	}
 	
 	/**
-	 * @dataProvider providerLoad
-	 *
 	 * @covers Pierrre\EncrypterBundle\DependencyInjection\PierrreEncrypterExtension::load
 	 */
-	public function testLoadWithEncrypterKeyDefault(PierrreEncrypterExtension $extension, ContainerBuilder $containerBuilder){
+	public function testLoadWithEncrypterKeyDefault(){
+		$extension = new PierrreEncrypterExtension();
+		$containerBuilder = $this->getContainerBuilder();
+		
 		$configs = array(
 			array(
 				'encrypters' => array(
@@ -62,11 +64,12 @@ class PierrreEncrypterExtensionTest extends \PHPUnit_Framework_TestCase{
 	}
 	
 	/**
-	 * @dataProvider providerLoad
-	 *
 	 * @covers Pierrre\EncrypterBundle\DependencyInjection\PierrreEncrypterExtension::load
 	 */
-	public function testLoadWithTwigDefaultEncrypterDefault(PierrreEncrypterExtension $extension, ContainerBuilder $containerBuilder){
+	public function testLoadWithTwigDefaultEncrypterDefault(){
+		$extension = new PierrreEncrypterExtension();
+		$containerBuilder = $this->getContainerBuilder();
+		
 		$configs = array(
 			array(
 				'encrypters' => array(
@@ -85,13 +88,14 @@ class PierrreEncrypterExtensionTest extends \PHPUnit_Framework_TestCase{
 	}
 	
 	/**
-	 * @dataProvider providerLoad
-	 * 
 	 * @expectedException Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
 	 *
 	 * @covers Pierrre\EncrypterBundle\DependencyInjection\PierrreEncrypterExtension::load
 	 */
-	public function testLoadWithEncryptersEmpty(PierrreEncrypterExtension $extension, ContainerBuilder $containerBuilder){
+	public function testLoadWithEncryptersEmpty(){
+		$extension = new PierrreEncrypterExtension();
+		$containerBuilder = $this->getContainerBuilder();
+		
 		$configs = array(
 			array(
 				'encrypters' => array(
@@ -104,11 +108,12 @@ class PierrreEncrypterExtensionTest extends \PHPUnit_Framework_TestCase{
 	}
 	
 	/**
-	 * @dataProvider providerLoad
-	 *
 	 * @covers Pierrre\EncrypterBundle\DependencyInjection\PierrreEncrypterExtension::load
 	 */
-	public function testLoadServiceEncrypterManager(PierrreEncrypterExtension $extension, ContainerBuilder $containerBuilder){
+	public function testLoadServiceEncrypterManager(){
+		$extension = new PierrreEncrypterExtension();
+		$containerBuilder = $this->getContainerBuilder();
+		
 		$configs = array(
 			array(
 				'encrypters' => array(
@@ -127,11 +132,12 @@ class PierrreEncrypterExtensionTest extends \PHPUnit_Framework_TestCase{
 	}
 	
 	/**
-	 * @dataProvider providerLoad
-	 *
 	 * @covers Pierrre\EncrypterBundle\DependencyInjection\PierrreEncrypterExtension::load
 	 */
-	public function testLoadServiceTwigExtension(PierrreEncrypterExtension $extension, ContainerBuilder $containerBuilder){
+	public function testLoadServiceTwigExtension(){
+		$extension = new PierrreEncrypterExtension();
+		$containerBuilder = $this->getContainerBuilder();
+		
 		$configs = array(
 			array(
 				'encrypters' => array(
@@ -149,17 +155,16 @@ class PierrreEncrypterExtensionTest extends \PHPUnit_Framework_TestCase{
 		$this->assertInstanceOf('Pierrre\EncrypterBundle\Twig\Extension\Encrypter', $twigExtension);
 	}
 	
-	public function providerLoad(){
-		$extension = new PierrreEncrypterExtension();
-		
+	private function getContainerBuilder(){
 		$containerBuilder = new ContainerBuilder();
 		$containerBuilder->setParameter('kernel.secret', 'secret');
 		
-		return array(
-			array($extension, $containerBuilder),
-		);
+		return $containerBuilder;
 	}
 	
+	/**
+	 * @covers Pierrre\EncrypterBundle\DependencyInjection\PierrreEncrypterExtension::getConfigTreeBuilder
+	 */
 	public function testGetConfigTreeBuilder(){
 		$extension = new PierrreEncrypterExtension();
 		
