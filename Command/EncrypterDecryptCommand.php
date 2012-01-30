@@ -24,7 +24,7 @@ class EncrypterDecryptCommand extends ContainerAwareCommand{
 		$encrypterName = $input->getArgument('encrypterName');
 		$encryptedData = $input->getArgument('encryptedData');
 		
-		$encrypter = $this->getContainer()->get('pierrre_encrypter_manager')->get($encrypterName);
+		$encrypter = $this->getContainer()->get('pierrre_encrypter.manager')->get($encrypterName);
 		$data = $encrypter->decrypt($encryptedData);
 		
 		$output->writeln($data);

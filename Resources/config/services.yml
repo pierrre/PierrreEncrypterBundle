@@ -1,4 +1,4 @@
 services:
-    pierrre_encrypter_manager:
+    pierrre_encrypter.manager:
         class: Pierrre\EncrypterBundle\Util\EncrypterManager
         arguments: ["%pierrre_encrypter.encrypters%"]

@@ -119,7 +119,7 @@ class PierrreEncrypterExtensionTest extends \PHPUnit_Framework_TestCase{
 		
 		$extension->load($configs, $containerBuilder);
 		
-		$encrypterManager = $containerBuilder->get('pierrre_encrypter_manager');
+		$encrypterManager = $containerBuilder->get('pierrre_encrypter.manager');
 		$this->assertInstanceOf('Pierrre\EncrypterBundle\Util\EncrypterManager', $encrypterManager);
 		
 		$encrypter = $encrypterManager->get('encrypter');
@@ -145,7 +145,7 @@ class PierrreEncrypterExtensionTest extends \PHPUnit_Framework_TestCase{
 		
 		$extension->load($configs, $containerBuilder);
 		
-		$twigExtension = $containerBuilder->get('pierrre.twig_extension_encrypter');
+		$twigExtension = $containerBuilder->get('pierrre_encrypter.twig_extension');
 		$this->assertInstanceOf('Pierrre\EncrypterBundle\Twig\Extension\Encrypter', $twigExtension);
 	}
 	
