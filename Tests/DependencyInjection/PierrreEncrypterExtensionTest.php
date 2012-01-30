@@ -152,7 +152,7 @@ class PierrreEncrypterExtensionTest extends \PHPUnit_Framework_TestCase{
 		$extension->load($configs, $containerBuilder);
 		
 		$twigExtension = $containerBuilder->get('pierrre_encrypter.twig_extension');
-		$this->assertInstanceOf('Pierrre\EncrypterBundle\Twig\Extension\Encrypter', $twigExtension);
+		$this->assertInstanceOf('Pierrre\EncrypterBundle\Twig\Extension\EncrypterExtension', $twigExtension);
 	}
 	
 	private function getContainerBuilder(){

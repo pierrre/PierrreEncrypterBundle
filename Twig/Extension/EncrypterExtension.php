@@ -7,7 +7,7 @@ use \Twig_Filter_Method;
 
 use Pierrre\EncrypterBundle\Util\EncrypterManager;
 
-class Encrypter extends Twig_Extension{
+class EncrypterExtension extends Twig_Extension{
 	/**
 	 * @var Pierrre\EncrypterBundle\Util\EncrypterManager
 	 */
