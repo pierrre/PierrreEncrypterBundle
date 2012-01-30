@@ -40,6 +40,10 @@ class Encrypter{
 		$this->base64UrlSafe = isset($options['base64_url_safe']) ? (bool)$options['base64_url_safe'] : self::DEFAULT_BASE64_URL_SAFE;
 		
 		//Initialize encryption
+		if($this->mode == MCRYPT_MODE_STREAM){
+			throw new \InvalidArgumentException('Stream mode not supported');
+		}
+		
 		$this->module = @mcrypt_module_open($this->algorithm, '', $this->mode, '');
 		if($this->module === false){
 			throw new \InvalidArgumentException('Unknown algorithm/mode');
