@@ -98,7 +98,7 @@ Please note:
 
 ``` php
 <?php
-$encrypter = $container->get('pierrre_encrypter')->get('my_encrypter');
+$encrypter = $container->get('pierrre_encrypter.manager')->get('my_encrypter');
 $data = 'foobar';
 $encryptedData = $encrypter->encrypt($data);
 $decryptedData = $encrypter->decrypt($encryptedData);
