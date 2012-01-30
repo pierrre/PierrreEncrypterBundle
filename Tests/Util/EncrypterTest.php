@@ -402,7 +402,7 @@ class EncrypterTest extends \PHPUnit_Framework_TestCase{
 	
 	public static function getBaseOptions(){
 		return array(
-			'key' => 'foobar'
+			'key' => 'secret'
 		);
 	}
 }
