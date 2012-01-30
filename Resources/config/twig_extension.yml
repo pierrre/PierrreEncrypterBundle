@@ -1,6 +1,6 @@
 services:
     pierrre_encrypter.twig_extension:
         class: Pierrre\EncrypterBundle\Twig\Extension\Encrypter
-        arguments: ["@pierrre_encrypter.manager", %pierrre_encrypter.twig.default_encrypter%]
+        arguments: ["@pierrre_encrypter.manager", "%pierrre_encrypter.twig.default_encrypter%"]
         tags:
             - { name: twig.extension }
