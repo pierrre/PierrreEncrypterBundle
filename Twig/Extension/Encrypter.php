@@ -38,6 +38,7 @@ class Encrypter extends Twig_Extension{
 	
 	/**
 	 * @param string $data
+	 * @param string $encrypterName
 	 */
 	public function encryptFilter($data, $encrypterName = null){
 		if($encrypterName == null){
@@ -49,6 +50,7 @@ class Encrypter extends Twig_Extension{
 	
 	/**
 	 * @param string $encryptedData
+	 * @param string $encrypterName
 	 */
 	public function decryptFilter($encryptedData, $encrypterName = null){
 		if($encrypterName == null){
@@ -62,6 +64,6 @@ class Encrypter extends Twig_Extension{
 	 * @see Twig_ExtensionInterface::getName()
 	 */
 	public function getName(){
-		return 'encrypter_extension';
+		return 'pierrre_encrypter';
 	}
 }
