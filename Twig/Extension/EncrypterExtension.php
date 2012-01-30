@@ -23,7 +23,12 @@ class EncrypterExtension extends Twig_Extension{
 	 */
 	public function __construct(EncrypterManager $encrypterManager, $defaultEncrypterName){
 		$this->encrypterManager = $encrypterManager;
-		$this->defaultEncrypterName = $defaultEncrypterName;
+		
+		if($this->encrypterManager->has($defaultEncrypterName)){
+			$this->defaultEncrypterName = $defaultEncrypterName;
+		} else{
+			throw new \InvalidArgumentException('Unknown default encrypter');
+		}
 	}
 	
 	/**
