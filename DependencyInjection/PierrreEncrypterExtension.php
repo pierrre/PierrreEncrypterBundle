@@ -59,6 +59,7 @@ class PierrreEncrypterExtension extends Extension implements ConfigurationInterf
 		$treeBuilder->root($this->getAlias())
 			->children()
 				->arrayNode('encrypters')
+					->isRequired()
 					->requiresAtLeastOneElement()
 					->useAttributeAsKey('name')
 					->prototype('array')
