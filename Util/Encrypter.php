@@ -40,11 +40,7 @@ class Encrypter{
 		$this->base64UrlSafe = isset($options['base64_url_safe']) ? (bool)$options['base64_url_safe'] : self::DEFAULT_BASE64_URL_SAFE;
 		
 		//Initialize encryption
-		try{
-			$this->module = mcrypt_module_open($this->algorithm, '', $this->mode, '');
-		} catch(\Exception $e){
-			$this->module = false;
-		}
+		$this->module = @mcrypt_module_open($this->algorithm, '', $this->mode, '');
 		if($this->module === false){
 			throw new \InvalidArgumentException('Unknown algorithm/mode');
 		}
