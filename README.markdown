@@ -21,7 +21,7 @@ Add the following lines in your `deps` file:
 
 ```
 [PierrreEncrypterBundle]
-    git=http://github.com/pierrre/Symfony2-PierrreEncrypterBundle.git
+    git=http://github.com/pierrre/PierrreEncrypterBundle.git
     target=/bundles/Pierrre/EncrypterBundle
 ```
 
