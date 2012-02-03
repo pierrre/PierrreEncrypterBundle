@@ -2,10 +2,11 @@
 
 PierrreEncrypterBundle provides easy to use encryption service in Symfony2.
 
-##Features
+## Features
 
 - A service you can call from PHP code
 - A Twig extension (optional)
+- 100% unit testing! [![Build Status](https://secure.travis-ci.org/pierrre/PierrreEncrypterBundle.png)](http://travis-ci.org/pierrre/PierrreEncrypterBundle.png)
 
 ## Prerequisites
 
@@ -38,7 +39,6 @@ Add the Pierrre namespace to your autoloader:
 ``` php
 <?php
 // app/autoload.php
-
 $loader->registerNamespaces(array(
     // ...
     'Pierrre' => __DIR__.'/../vendor/bundles',
@@ -52,7 +52,6 @@ Finally, enable the bundle in the kernel:
 ``` php
 <?php
 // app/AppKernel.php
-
 public function registerBundles()
 {
     $bundles = array(
