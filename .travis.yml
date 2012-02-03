@@ -7,3 +7,4 @@ env:
     - SYMFONY_VERSION=origin/2.0
     - SYMFONY_VERSION=origin/master
 before_script: php vendor/vendors.php
+script: phpunit --coverage-text
