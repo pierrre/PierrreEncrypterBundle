@@ -6,7 +6,7 @@ PierrreEncrypterBundle provides easy to use encryption service in Symfony2.
 
 - A service you can call from PHP code
 - A Twig extension (optional)
-- 100% unit testing! [![Build Status](https://secure.travis-ci.org/pierrre/PierrreEncrypterBundle.png)](http://travis-ci.org/pierrre/PierrreEncrypterBundle.png)
+- 100% unit testing! [![Build Status](https://secure.travis-ci.org/pierrre/PierrreEncrypterBundle.png)](http://travis-ci.org/pierrre/PierrreEncrypterBundle)
 
 ## Prerequisites
 
