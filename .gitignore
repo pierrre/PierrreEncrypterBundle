@@ -1,3 +1,10 @@
+#Tests
+/Tests/coverage
+
+#Vendors
+/vendor/*
+!/vendor/vendors.php
+
 #Mac OS X
 .DS_Store
 
@@ -5,13 +12,6 @@
 /.buildpath
 /.project
 /.settings
-
-#Vendors
-/vendor/*
-!/vendor/vendors.php
-
-#Tests
-/Tests/coverage
 
 #NetBeans
 /nbproject
