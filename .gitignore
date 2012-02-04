@@ -12,3 +12,6 @@
 
 #Tests
 /Tests/coverage
+
+#NetBeans
+/nbproject
