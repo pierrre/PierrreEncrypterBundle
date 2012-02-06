@@ -60,11 +60,7 @@ class Encrypter{
 		if($this->randomInitializationVector){
 			$this->mcryptRandomMethod = defined('MCRYPT_DEV_URANDOM') ? MCRYPT_DEV_URANDOM : MCRYPT_DEV_RANDOM; 
 		} else{
-			$this->fixedInitializationVector = '';
-			
-			for($i = 0; $i < $this->initializationVectorSize; $i++){
-				$this->fixedInitializationVector .= self::FIXED_INITIALIZATION_VECTOR_CHAR;
-			}
+			$this->fixedInitializationVector = str_repeat(self::FIXED_INITIALIZATION_VECTOR_CHAR, $this->initializationVectorSize);
 		}
 	}
 	
