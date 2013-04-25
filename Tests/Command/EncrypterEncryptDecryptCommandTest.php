@@ -22,16 +22,16 @@ class EncrypterEncryptDecryptCommandTest extends \PHPUnit_Framework_TestCase{
 			)
 		);
 		$encrypterManager = new EncrypterManager($configs);
-		
+
 		$container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
 		$container
 		->expects($this->any())
 		->method('get')
 		->with('pierrre_encrypter.manager')
 		->will($this->returnValue($encrypterManager));
-		
+
 		$data = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
-		
+
 		$encryptCommand = new EncrypterEncryptCommand();
 		$encryptCommand->setContainer($container);
 		$input = new ArrayInput(array(
@@ -41,7 +41,7 @@ class EncrypterEncryptDecryptCommandTest extends \PHPUnit_Framework_TestCase{
 		$output = new StringOutput();
 		$encryptCommand->run($input, $output);
 		$encryptedData = $output->getContent();
-		
+
 		$decryptCommand = new EncrypterDecryptCommand();
 		$decryptCommand->setContainer($container);
 		$input = new ArrayInput(array(
@@ -51,28 +51,28 @@ class EncrypterEncryptDecryptCommandTest extends \PHPUnit_Framework_TestCase{
 		$output = new StringOutput();
 		$decryptCommand->run($input, $output);
 		$decryptedData = $output->getContent();
-		
-		$this->assertEquals($data, $decryptedData);
+
+		$this->assertEquals($data, trim($decryptedData));
 	}
 }
 
 class StringOutput extends Output{
 	private $content = '';
-	
+
 	public function getContent(){
 		return $this->content;
 	}
-	
+
 	public function clearContent(){
 		$this->content = '';
 	}
-	
+
 	/**
 	 * @see Symfony\Component\Console\Output.Output::doWrite()
 	 */
 	public function doWrite($message, $newline){
 		$this->content .= $message;
-		
+
 		if($newline){
 			$this->content .= "\n";
 		}

@@ -1,0 +1,27 @@
+{
+    "name": "pierrre/encrypter-bundle",
+    "type": "symfony-bundle",
+    "description": "Provides an easy to use encryption service for Symfony2",
+    "keywords": ["encryption"],
+    "homepage": "https://github.com/pierrre/PierrreEncrypterBundle",
+    "authors": [
+        {
+            "name": "Pierre Durand",
+            "email": "pierredurand@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "ext-mcrypt": "*"
+    },
+    "require-dev": {
+        "twig/twig": "*",
+        "symfony/symfony": "2.2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Pierrre\\EncrypterBundle": ""
+        }
+    },
+    "target-dir": "Pierrre/EncrypterBundle"
+}

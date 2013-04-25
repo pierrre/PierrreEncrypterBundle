@@ -13,20 +13,20 @@ class EncrypterDecryptCommand extends ContainerAwareCommand{
 	 */
 	protected function configure(){
 		parent::configure();
-		
+
 		$this->setName('pierrre:encrypter:decrypt')
 		->setDescription('Decrypt data')
 		->addArgument('encrypterName', InputArgument::REQUIRED, 'Encrypter name')
 		->addArgument('encryptedData', InputArgument::REQUIRED, 'Data to decrypt');
 	}
-	
+
 	protected function execute(InputInterface $input, OutputInterface $output){
 		$encrypterName = $input->getArgument('encrypterName');
 		$encryptedData = $input->getArgument('encryptedData');
-		
+
 		$encrypter = $this->getContainer()->get('pierrre_encrypter.manager')->get($encrypterName);
 		$data = $encrypter->decrypt($encryptedData);
-		
-		$output->write($data);
+
+		$output->writeln($data);
 	}
 }

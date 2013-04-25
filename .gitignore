@@ -1,17 +1,3 @@
-#Tests
-/Tests/coverage
-
-#Vendors
-/vendor/*
-!/vendor/vendors.php
-
-#Mac OS X
-.DS_Store
-
-#Eclipse
-/.buildpath
-/.project
-/.settings
-
-#NetBeans
-/nbproject
+composer.lock
+phpunit.xml
+vendor/*
