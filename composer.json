@@ -12,12 +12,14 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "ext-mcrypt": "*"
+        "ext-mcrypt": "*" ,
+        "symfony/symfony": ">=2.1"
     },
     "require-dev": {
-        "twig/twig": "*",
-        "symfony/symfony": "2.2.*"
+        "fabpot/php-cs-fixer": "*",
+        "phpunit/phpunit" : "*"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-0": {
             "Pierrre\\EncrypterBundle": ""
