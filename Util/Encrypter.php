@@ -51,11 +51,7 @@ class Encrypter
             throw new \InvalidArgumentException('Unknown algorithm/mode');
         }
 
-        if (strlen($this->key) == 0) {
-            throw new \InvalidArgumentException('The key length must be > 0');
-        } elseif (strlen($this->key) > ($keyMaxLength = mcrypt_enc_get_key_size($this->module))) {
-            throw new \InvalidArgumentException('The key length must be <= ' . $keyMaxLength . ' for the choosen algorithm (' . $this->algorithm . ')');
-        }
+        $this->checkKey();
 
         $this->initializationVectorSize = mcrypt_enc_get_iv_size($this->module);
 
@@ -63,6 +59,15 @@ class Encrypter
             $this->mcryptRandomMethod = defined('MCRYPT_DEV_URANDOM') ? MCRYPT_DEV_URANDOM : MCRYPT_DEV_RANDOM;
         } else {
             $this->fixedInitializationVector = str_repeat(self::FIXED_INITIALIZATION_VECTOR_CHAR, $this->initializationVectorSize);
+        }
+    }
+
+    private function checkKey()
+    {
+        if (strlen($this->key) == 0) {
+            throw new \InvalidArgumentException('The key length must be > 0');
+        } elseif (strlen($this->key) > ($keyMaxLength = mcrypt_enc_get_key_size($this->module))) {
+            throw new \InvalidArgumentException('The key length must be <= ' . $keyMaxLength . ' for the choosen algorithm (' . $this->algorithm . ')');
         }
     }
 
@@ -199,5 +204,19 @@ class Encrypter
         }
 
         return $data;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return $this
+     */
+    public function setKey($key)
+    {
+        $this->key = (string) $key;
+
+        $this->checkKey();
+
+        return $this;
     }
 }
