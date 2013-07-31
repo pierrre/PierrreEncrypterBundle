@@ -12,6 +12,10 @@ PierrreEncrypterBundle provides easy to use encryption service in Symfony2.
 
 Make sure PHP Mcrypt extension is installed.
 
+## Do not use in production
+
+This library is **not meant for production use** (as such has no stable tags). It has not been vetted by a cryptography expert.
+
 ## Installation
 
 This installation procedure is intended for use with Symfony2, but you can adapt it with submodules.
