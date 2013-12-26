@@ -74,7 +74,7 @@ This is the default configuration, all values are optional:
 pierrre_encrypter:
     encrypters: #Encrypters list, requires at least one encrypter.
         my_encrypter: #Encrypter name
-            key: "@kernel.secret" #The secret that is used to encrypt data. By default, it will use the kernel secret.
+            key: "%kernel.secret%" #The secret that is used to encrypt data. By default, it will use the kernel secret.
             algorithm: "rijndael-128" #Encryption algorithm
             mode: "cbc" #Encryption mode
             random_initialization_vector: true #If you set it to false, it will use a blank string as initialization vector.
