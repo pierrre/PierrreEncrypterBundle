@@ -10,7 +10,7 @@ use Pierrre\EncrypterBundle\Util\EncrypterManager;
 class EncrypterExtension extends Twig_Extension
 {
     /**
-     * @var Pierrre\EncrypterBundle\Util\EncrypterManager
+     * @var EncrypterManager
      */
     private $encrypterManager;
 
@@ -20,7 +20,7 @@ class EncrypterExtension extends Twig_Extension
     private $defaultEncrypterName;
 
     /**
-     * @param Pierrre\EncrypterBundle\Util\EncrypterManager $encrypterManager
+     * @param EncrypterManager $encrypterManager
      */
     public function __construct(EncrypterManager $encrypterManager, $defaultEncrypterName)
     {
