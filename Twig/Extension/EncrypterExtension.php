@@ -3,14 +3,14 @@
 namespace Pierrre\EncrypterBundle\Twig\Extension;
 
 use \Twig_Extension;
-use \Twig_Filter_Method;
+use \Twig_SimpleFilter;
 
 use Pierrre\EncrypterBundle\Util\EncrypterManager;
 
 class EncrypterExtension extends Twig_Extension
 {
     /**
-     * @var Pierrre\EncrypterBundle\Util\EncrypterManager
+     * @var EncrypterManager
      */
     private $encrypterManager;
 
@@ -20,7 +20,7 @@ class EncrypterExtension extends Twig_Extension
     private $defaultEncrypterName;
 
     /**
-     * @param Pierrre\EncrypterBundle\Util\EncrypterManager $encrypterManager
+     * @param EncrypterManager $encrypterManager
      */
     public function __construct(EncrypterManager $encrypterManager, $defaultEncrypterName)
     {
@@ -39,8 +39,8 @@ class EncrypterExtension extends Twig_Extension
     public function getFilters()
     {
         return array(
-            'encrypt' => new Twig_Filter_Method($this, 'encryptFilter'),
-            'decrypt' => new Twig_Filter_Method($this, 'decryptFilter')
+            new Twig_SimpleFilter('encrypt', array($this, 'encryptFilter')),
+            new Twig_SimpleFilter('decrypt', array($this, 'decryptFilter')),
         );
     }
 
